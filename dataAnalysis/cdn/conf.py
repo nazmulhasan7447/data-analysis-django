@@ -11,4 +11,4 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_LOCATION = "https://dj-data-analysis.nyc3.digitaloceanspaces.com"
 
-DEFAULT_FILE_STORAGE = "config.cdn.backends.MediaRootS3BotoStorage"
+DEFAULT_FILE_STORAGE = "dataAnalysis.cdn.backends.MediaRootS3BotoStorage"
