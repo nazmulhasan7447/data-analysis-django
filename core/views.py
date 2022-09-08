@@ -24,13 +24,48 @@ from django.http import JsonResponse
 from django.contrib.auth import authenticate
 from django.http import Http404, HttpResponse
 import datetime
-
-
+from yahoo_fin import stock_info as si
+from .check_yahoo_symbool import *
 
 import stripe
 # This is your test secret API key.
 stripe.api_key = 'sk_test_tWChqwtM920Q34mlu8VPNroB'
 
+
+
+# checking symbool
+class IsSymboolOkay(APIView):
+
+    def post(self, request):
+
+        symbol = symbol_found(request.data['epgSymbol'])
+
+        if symbol:
+            return Response({"success": "Symbool found!"})
+        return Response({"failed": "Symbol not found!"})
+
+
+
+# symbol_ok = False
+#         try:
+#             # returns data of dictionary type
+#             data = si.get_quote_data('msft')
+#             # print(data["exchange"])
+#
+#             # exchange must be NY stock exhcange or Nasdaq
+#             if (data["exchange"] == "NYQ" or data["exchange"] == "NMS"):
+#                 symbol_ok = True
+#
+#             else:
+#                 # symbol found but not from exchanges covered
+#                 # print('Error! ' + symbol +' not covered!')
+#                 symbol_ok = False  # set symbol_ok to False
+#
+#             # return symbol_ok
+#
+#         # if symbol is not found then IndexError is handled
+#         except(IndexError):
+#             symbol_ok = False  # set symbol_ok to False
 
 class AllUsersAccountView(generics.ListAPIView):
     permission_classes = [AllowAny]

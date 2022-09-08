@@ -50,7 +50,7 @@ ROOT_URLCONF = 'dataAnalysis.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'build')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -154,16 +154,15 @@ SIMPLE_JWT = {
 
 STATIC_URL = '/static/'
 
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, "templates/build/static"),  # update the STATICFILES_DIRS
-# )
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
+STATICFILES_DIRS = (
+     os.path.join(BASE_DIR, 'core/templates/build/static'),
+     os.path.join(BASE_DIR, 'core/templates/build'),
+)
 
 # BASE_DOMAIN = 'http://localhost:3000/'
 
@@ -208,9 +207,9 @@ CSRF_COOKIE_NAME = "XSRF-TOKEN"
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-DEFAULT_FROM_EMAIL = 'spinit2win.com@gmail.com'
-SERVER_EMAIL = 'spinit2win.com@gmail.com'
+DEFAULT_FROM_EMAIL = 'eastern747406@gmail.com'
+SERVER_EMAIL = 'eastern747406@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'spinit2win.com@gmail.com'
-EMAIL_HOST_PASSWORD = 'mbvnpdclbxjfgmff'
+EMAIL_HOST_USER = 'eastern747406@gmail.com'
+EMAIL_HOST_PASSWORD = 'oiolwhcbnntnmkwp'

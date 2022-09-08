@@ -6,5 +6,5 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from . import views
 
 urlpatterns = [
-    # re_path(r'', views.index, name='index'),
+    re_path(r'^$', views.index, name='index'),
 ]

@@ -2,7 +2,12 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from .views import *
 
+
 urlpatterns = [
+
+
+    re_path(r'^check/symbool/$', IsSymboolOkay.as_view(), name='checkSymbool'),
+
     re_path(r'^user-list/$', AllUsersAccountView.as_view(), name='userList'),
     re_path(r'^user-details/(?P<user_id>\w+)/$', AccountDetailsView.as_view(), name='userDetails'),
     re_path(r'^create-account/$', CreateAccountView.as_view(), name='createAccount'),
