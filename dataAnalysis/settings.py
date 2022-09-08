@@ -187,8 +187,8 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# MEDIA_URL = '/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # STATICFILES_DIRS = (
 #      os.path.join(BASE_DIR, 'core/templates/build/static'),
@@ -197,7 +197,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 # new section **********************************************
-# from .cdn.conf import *
+from .cdn.conf import *
 
 
 # BASE_DOMAIN = 'http://localhost:3000/'
