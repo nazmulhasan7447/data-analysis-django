@@ -1,5 +1,8 @@
-import os
+from django.core.management.utils import get_random_secret_key
 from pathlib import Path
+import os
+import sys
+import dj_database_url
 from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -9,13 +12,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(ytj(ta%xugg#&8@-*c5ts%r$j(g!bvrhw3pk+m$v+%l2eib%q'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# SECRET_KEY = 'django-insecure-*4rc-p-ii51jo7yzd*gtsh1gu21ks%j!z1@)ekvf2!1!mx5nt2'
+# DEBUG = True
+# ALLOWED_HOSTS = []
+# ends prev section *******************************************************
 
-ALLOWED_HOSTS = []
+## SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
+DEBUG = os.getenv("DEBUG", "False") == "True"
+ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 
 # Application definition
@@ -65,18 +71,43 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dataAnalysis.wsgi.application'
 
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+
 AUTH_USER_MODEL = 'user.Account'
 
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
+
+
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+if DEVELOPMENT_MODE is True:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+        }
     }
-}
+elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
+    if os.getenv("DATABASE_URL", None) is None:
+        raise Exception("DATABASE_URL environment variable not defined")
+    DATABASES = {
+        "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
+    }
+
+
 
 
 # Password validation
@@ -163,6 +194,11 @@ STATICFILES_DIRS = (
      os.path.join(BASE_DIR, 'core/templates/build/static'),
      os.path.join(BASE_DIR, 'core/templates/build'),
 )
+
+
+# new section **********************************************
+# from .cdn.conf import *
+
 
 # BASE_DOMAIN = 'http://localhost:3000/'
 
