@@ -113,25 +113,19 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         fields = ["username", "password_old", "password_new"]
 
     def validate(self, attrs):
-        print(attrs)
         auth = authenticate(username=attrs["username"], password=attrs["password_old"])
-        print(auth)
         if attrs['password_new'] == attrs['password_old']:
-            print("auth1")
             raise serializers.ValidationError("New password can't be matched with old password!")
         if auth is None:
-            print('auth none')
             raise serializers.ValidationError("User not found!")
         return attrs
 
     def validate_password_new(self, value):
-        print('validated pass')
         if len(value) < 8:
             raise serializers.ValidationError("Password length must be 8 character long!")
         return value
 
     def update(self, instance, validated_data):
-        print("from update")
         instance.set_password(validated_data["password_new"])
         instance.save()
         return instance
