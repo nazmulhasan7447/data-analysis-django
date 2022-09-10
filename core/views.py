@@ -25,7 +25,7 @@ from django.contrib.auth import authenticate
 from django.http import Http404, HttpResponse
 import datetime
 from yahoo_fin import stock_info as si
-from .check_yahoo_symbool import *
+from .check_yahoo_symbool import symbol_found
 
 import stripe
 # This is your test secret API key.
@@ -45,27 +45,6 @@ class IsSymboolOkay(APIView):
         return Response({"failed": "Symbol not found!"})
 
 
-
-# symbol_ok = False
-#         try:
-#             # returns data of dictionary type
-#             data = si.get_quote_data('msft')
-#             # print(data["exchange"])
-#
-#             # exchange must be NY stock exhcange or Nasdaq
-#             if (data["exchange"] == "NYQ" or data["exchange"] == "NMS"):
-#                 symbol_ok = True
-#
-#             else:
-#                 # symbol found but not from exchanges covered
-#                 # print('Error! ' + symbol +' not covered!')
-#                 symbol_ok = False  # set symbol_ok to False
-#
-#             # return symbol_ok
-#
-#         # if symbol is not found then IndexError is handled
-#         except(IndexError):
-#             symbol_ok = False  # set symbol_ok to False
 
 class AllUsersAccountView(generics.ListAPIView):
     permission_classes = [AllowAny]
@@ -288,5 +267,21 @@ class Unsubscribe(APIView):
             return Response('Successfully unsubscribed!')
 
 
+class StartFreeTrialView(APIView):
+
+    def post(self, request, userID):
+        if request.data:
+            user = Account.objects.get(userID=userID)
+            if user:
+                user.is_free_trial_used = True
+                user.is_paid_member = True
+                user.membershipStartingDate = datetime.datetime.now()
+                user.membershipEndingDate = datetime.datetime.now() + datetime.timedelta(seconds=15)
+                user.save()
+                return Response({'success':"Congratulations! Your 7-days free trial has been started!"})
+            else:
+                return Response({'error': "Your 7-days free trial can't be activated! Try again please!"})
+        else:
+            return Response({'error': "Your 7-days free trial can't be activated! Try again please!"})
 
 

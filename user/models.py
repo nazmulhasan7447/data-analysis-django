@@ -58,6 +58,7 @@ class Account(AbstractBaseUser):
     is_a_staff = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=options, blank=True, null=True, default=0)
     is_agreed_with_termsConsition = models.BooleanField(default=False, blank=True, null=True)
+    is_free_trial_used = models.BooleanField(default=False, blank=True, null=True)
 
     membershipStartingDate = models.DateTimeField(blank=True, null=True)
     membershipEndingDate = models.DateTimeField(blank=True, null=True)

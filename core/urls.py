@@ -2,10 +2,7 @@ from django.contrib import admin
 from django.urls import path, re_path, include
 from .views import *
 
-
 urlpatterns = [
-
-
     re_path(r'^check/symbool/$', IsSymboolOkay.as_view(), name='checkSymbool'),
 
     re_path(r'^user-list/$', AllUsersAccountView.as_view(), name='userList'),
@@ -24,4 +21,5 @@ urlpatterns = [
     re_path(r'^user/forgot/password/$', ForgotPassword.as_view(), name='forgotPassword'),
     re_path(r'^upload/profile/image/$', UploadProfileImageView.as_view(), name='uploadProfileImage'),
     re_path(r'^unsubscribe/(?P<username>\w+)/$', Unsubscribe.as_view(), name='unsubscribe'),
+    re_path(r'^free/trail/(?P<userID>\w+)/$', StartFreeTrialView.as_view(), name='startSevenDaysFreeTrial'),
 ]

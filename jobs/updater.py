@@ -4,7 +4,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 
 def start():
     scheduler = BackgroundScheduler()
-    scheduler.add_job(monitorMembeshipStatus, 'interval', seconds=1800)
+    scheduler.add_job(monitorMembeshipStatus, 'interval', seconds=20)
     scheduler.start()
 
 
