@@ -113,8 +113,9 @@ class ChangePasswordSerializer(serializers.ModelSerializer):
         fields = ["username", "password_old", "password_new"]
 
     def validate(self, attrs):
-
+        print(attrs)
         auth = authenticate(username=attrs["username"], password=attrs["password_old"])
+        print(auth)
         if attrs['password_new'] == attrs['password_old']:
             print("auth1")
             raise serializers.ValidationError("New password can't be matched with old password!")
