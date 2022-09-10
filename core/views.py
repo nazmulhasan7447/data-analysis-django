@@ -187,12 +187,12 @@ class ChangePasswordView(APIView):
         except Account.DoesNotExist:
             raise Http404
 
-    def put(self, request, user_id, format=None):
+    def put(self, request, user_id):
         user = self.get_object(user_id)
         serializer = ChangePasswordSerializer(user, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response({"Success": "Password updated successfully"}, status=status.HTTP_204_NO_CONTENT)
+            return Response({"Success": "Password updated successfully"}, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
