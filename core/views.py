@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.core.files.storage import FileSystemStorage
@@ -26,6 +26,7 @@ from django.http import Http404, HttpResponse
 import datetime
 from yahoo_fin import stock_info as si
 from .check_yahoo_symbool import symbol_found
+from .getPerpetualGrowthRateData import calculate_costOfEquity, calculate_costOfDebt, estimate_growth_rate
 
 import stripe
 # This is your test secret API key.
@@ -283,5 +284,81 @@ class StartFreeTrialView(APIView):
                 return Response({'error': "Your 7-days free trial can't be activated! Try again please!"})
         else:
             return Response({'error': "Your 7-days free trial can't be activated! Try again please!"})
+
+
+class GetPerpetualGrowthCostOfEquity(APIView):
+
+    def post(self, request):
+        cost_of_equity = calculate_costOfEquity(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']))
+        return Response(cost_of_equity)
+
+
+class GetPerpetualCostOfDebt(APIView):
+
+    def post(self, request):
+        cost_of_debt = calculate_costOfDebt(request.data['symbol'], request.data['rating'], float(request.data['premium']))
+        return Response(cost_of_debt)
+
+class GetPerpetualGrowthRateView(APIView):
+
+    def post(self, request, userID):
+        user = Account.objects.filter(userID=userID).first()
+        print(request.data)
+        estimateGrowthRate = estimate_growth_rate(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']), request.data['rating'], float(request.data['premium']))
+        if user and estimateGrowthRate:
+            perpetualGrowthRateToStore = PerpetualGrowthRateData(
+            user=user,
+            date = estimateGrowthRate['date'],
+            symbol = estimateGrowthRate['symbol'],
+            symbol_name = estimateGrowthRate['symbol_name'],
+            symbol_currency = estimateGrowthRate['symbol_currency'],
+            revenue_ttm = estimateGrowthRate['revenue_ttm'],
+            nop_ttm = estimateGrowthRate['nop_ttm'],
+            roe = estimateGrowthRate['roe'],
+            roc = estimateGrowthRate['roc'],
+            ke = estimateGrowthRate['ke'],
+            kd = estimateGrowthRate['kd'],
+            ev = estimateGrowthRate['ev'],
+            wacc = estimateGrowthRate['wacc'],
+            market_cap = estimateGrowthRate['market_cap'],
+            perpetual_growth_rate = estimateGrowthRate['perpetual_gowth_rate'],
+            de_ratio = estimateGrowthRate['de_ratio'],
+            beta = estimateGrowthRate['beta'],
+            )
+            perpetualGrowthRateToStore.save()
+        print(estimateGrowthRate)
+        return Response(estimateGrowthRate)
+
+
+class GetPerpetualGrowthRateHistoryView(APIView):
+
+    def get(self, request):
+        history = PerpetualGrowthRateData.objects.all()
+        serilizer = PerpetualGrowthRateHistorySerializer(history, many=True)
+
+        return Response(serilizer.data, status=status.HTTP_200_OK)
+# {
+#     'date': '16-Sep-2022',
+#     'symbol': 'aapl',
+#     'symbol_name': 'Apple Inc.',
+#     'symbol_currency': 'USD',
+#     'revenue_ttm': 387542.0,
+#     'nop_ttm': 101983.0,
+#     'roe': 1.714647116526408,
+#     'roc': 0.5735891292365494,
+#     'ke': 0.2081,
+#     'kd': 0.0948,
+#     'ev': 2701460.0,
+#     'wacc': 0.13182810549050045,
+#     'market_cap': 2630000.0,
+#     'perpetual_gowth_rate': 0.0393,
+#     'de_ratio': 2.059837885280603,
+#     'beta': 1.23
+# }
+
+
+
+
+
 
 

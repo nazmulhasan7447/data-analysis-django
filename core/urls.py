@@ -4,6 +4,10 @@ from .views import *
 
 urlpatterns = [
     re_path(r'^check/symbool/$', IsSymboolOkay.as_view(), name='checkSymbool'),
+    re_path(r'^get/perpetualgrowth/cost_of/equity/$', GetPerpetualGrowthCostOfEquity.as_view(), name='getPerpetualGrowthCostofEquity'),
+    re_path(r'^get/perpetualgrowth/cost_of/debt/$', GetPerpetualCostOfDebt.as_view(), name='getPerpetualGrowthCostofDebt'),
+    re_path(r'^get/perpetualgrowth/rate/(?P<userID>[-\w]+)/$', GetPerpetualGrowthRateView.as_view(), name='getGetPerpetualGrowthRateView'),
+    re_path(r'^get/perpetual/growth/history/$', GetPerpetualGrowthRateHistoryView.as_view(), name="getPerpetualGrowthHistory"),
 
     re_path(r'^user-list/$', AllUsersAccountView.as_view(), name='userList'),
     re_path(r'^user-details/(?P<user_id>\w+)/$', AccountDetailsView.as_view(), name='userDetails'),
