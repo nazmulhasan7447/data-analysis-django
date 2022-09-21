@@ -75,7 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dataAnalysis.wsgi.application'
 
-DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+# DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 AUTH_USER_MODEL = 'user.Account'
 
@@ -138,8 +138,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Asia/Dhaka'
+TIME_ZONE = 'America/New_York'
 # America/New_York
+# Asia/Dhaka
 
 USE_I18N = True
 
@@ -193,7 +194,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+#
 # STATICFILES_DIRS = (
 #      os.path.join(BASE_DIR, 'core/templates/build/static'),
 #      os.path.join(BASE_DIR, 'core/templates/build'),
@@ -249,4 +250,4 @@ SERVER_EMAIL = 'eastern747406@gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'eastern747406@gmail.com'
-EMAIL_HOST_PASSWORD = 'oiolwhcbnntnmkwp'
+# EMAIL_HOST_PASSWORD = 'oiolwhcbnntnmkwp'

@@ -297,14 +297,15 @@ class GetPerpetualCostOfDebt(APIView):
 
     def post(self, request):
         cost_of_debt = calculate_costOfDebt(request.data['symbol'], request.data['rating'], float(request.data['premium']))
-        return Response(cost_of_debt)
+        return Response(cost_of_debt*100)
 
 class GetPerpetualGrowthRateView(APIView):
 
     def post(self, request, userID):
         user = Account.objects.filter(userID=userID).first()
-        print(request.data)
+
         estimateGrowthRate = estimate_growth_rate(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']), request.data['rating'], float(request.data['premium']))
+
         if user and estimateGrowthRate:
             perpetualGrowthRateToStore = PerpetualGrowthRateData(
             user=user,
@@ -326,7 +327,7 @@ class GetPerpetualGrowthRateView(APIView):
             beta = estimateGrowthRate['beta'],
             )
             perpetualGrowthRateToStore.save()
-        print(estimateGrowthRate)
+
         return Response(estimateGrowthRate)
 
 
