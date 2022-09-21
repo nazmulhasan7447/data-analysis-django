@@ -42,7 +42,7 @@ class IsSymboolOkay(APIView):
         symbol = symbol_found(request.data['epgSymbol'])
 
         if symbol:
-            return Response({"success": "Symbool found!"})
+            return Response({"success": "Symbol found!"})
         return Response({"failed": "Symbol not found!"})
 
 
