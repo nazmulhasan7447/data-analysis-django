@@ -427,6 +427,7 @@ def get_ycharts_yield_quote(ticker):
 # rating is from the rating field
 
 def calculate_costOfDebt(ticker, rating, premium):
+    global CorporateYield
 
     Risk_free_rate = get_nbc_yieldQuote('US30Y')
 
@@ -438,15 +439,16 @@ def calculate_costOfDebt(ticker, rating, premium):
 
     if Rating == 'aaa':
         CorporateYield = get_ycharts_yield_quote('us_coporate_' + Rating + '_effective_yield')
+
     if CorporateYield == 0 or Rating == 'aa' or Rating == 'a' or Rating == 'bbb':
         CorporateYield = get_ycharts_yield_quote('us_corporate_' + Rating + '_effective_yield')
+
     else:
         if Rating == 'bb' or Rating == 'b' or Rating == 'ccc':
             CorporateYield = get_ycharts_yield_quote('us_high_yield_' + Rating + '_effective_yield')
 
     if CorporateYield >= 0:
         Default_spread = CorporateYield - Risk_free_rate
-
     else:
         Default_spread = Risk_free_rate
 
