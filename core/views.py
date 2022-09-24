@@ -291,13 +291,18 @@ class StartFreeTrialView(APIView):
 class GetPerpetualGrowthCostOfEquity(APIView):
 
     def post(self, request):
-        cost_of_equity = calculate_costOfEquity(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']))
+        crp = (float(request.data['crp'])) / 100
+        comRP = (float(request.data['comRP'])) / 100
+
+        cost_of_equity = calculate_costOfEquity(request.data['symbol'], crp, comRP)
         return Response(cost_of_equity)
 
 class GetPerpetualCostOfDebt(APIView):
 
     def post(self, request):
-        cost_of_debt = calculate_costOfDebt(request.data['symbol'], request.data['rating'], float(request.data['premium']))
+        premium = (float(request.data['premium'])) / 100
+
+        cost_of_debt = calculate_costOfDebt(request.data['symbol'], request.data['rating'], premium)
         return Response(cost_of_debt*100)
 
 class GetPerpetualGrowthRateView(APIView):
@@ -306,7 +311,11 @@ class GetPerpetualGrowthRateView(APIView):
 
         user = Account.objects.filter(userID=userID).first()
 
-        estimateGrowthRate = estimate_growth_rate(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']), request.data['rating'], float(request.data['premium']))
+        crp = (float(request.data['crp']))/100
+        comRP = (float(request.data['comRP']))/100
+        premium = (float(request.data['premium']))/100
+
+        estimateGrowthRate = estimate_growth_rate(request.data['symbol'], crp, comRP, request.data['rating'], premium)
 
         if user and estimateGrowthRate:
             perpetualGrowthRateToStore = PerpetualGrowthRateData(
@@ -356,10 +365,10 @@ class GetEstimatedIntrinsicValue(APIView):
         user = Account.objects.filter(userID=userID).first()
 
         estimated_intrinsic_value = get_3_stage_growth_value(
-            request.data['symbol'], float(request.data['crp']), float(request.data['comRP']),
-            request.data['rating'], float(request.data['premium']), float(request.data['stage_1_years']),
-            float(request.data['stage_1_growth']), float(request.data['stage_2_years']), float(request.data['stage_2_growth']),
-            float(request.data['stage_3_growth'])
+            request.data['symbol'], float(request.data['crp'])/100, float(request.data['comRP'])/100,
+            request.data['rating'], float(request.data['premium'])/100, float(request.data['stage_1_years']),
+            float(request.data['stage_1_growth'])/100, float(request.data['stage_2_years']), float(request.data['stage_2_growth'])/100,
+            float(request.data['stage_3_growth'])/100
         )
 
         if user and estimated_intrinsic_value:
