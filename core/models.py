@@ -82,3 +82,58 @@ class PerpetualGrowthRateData(models.Model):
         return self.symbol + ' ' + self.symbol_name
 
 
+
+class PerpetualGrowthRateData(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, blank=True, null=True, related_name='current_user')
+    date = models.CharField(max_length=255)
+    symbol = models.CharField(max_length=255)
+    symbol_name = models.CharField(max_length=255)
+    symbol_currency = models.CharField(max_length=255)
+    revenue_ttm = models.CharField(max_length=255)
+    nop_ttm = models.CharField(max_length=255)
+    roe = models.CharField(max_length=255)
+    roc = models.CharField(max_length=255)
+    ke = models.CharField(max_length=255)
+    kd = models.CharField(max_length=255)
+    ev = models.CharField(max_length=255)
+    wacc = models.CharField(max_length=255)
+    market_cap = models.CharField(max_length=255)
+    perpetual_growth_rate = models.CharField(max_length=255)
+    de_ratio = models.CharField(max_length=255)
+    beta = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['-pk']
+
+    def __str__(self):
+        return self.symbol + ' ' + self.symbol_name
+
+
+class EstimatedIntrinsicValueData(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE, blank=True, null=True)
+    date = models.CharField(max_length=255)
+    time = models.TimeField(auto_now_add=True)
+    symbol = models.CharField(max_length=255)
+    symbol_name = models.CharField(max_length=255)
+    symbol_currency = models.CharField(max_length=255)
+    revenue_ttm = models.CharField(max_length=255)
+    nop_ttm = models.CharField(max_length=255)
+    roe = models.CharField(max_length=255)
+    roc = models.CharField(max_length=255)
+    ke = models.CharField(max_length=255)
+    kd = models.CharField(max_length=255)
+    ev = models.CharField(max_length=255)
+    wacc = models.CharField(max_length=255)
+    market_cap = models.CharField(max_length=255)
+    stage_1_growth = models.CharField(max_length=255)
+    stage_2_growth = models.CharField(max_length=255)
+    perpetual_growth_rate = models.CharField(max_length=255)
+    de_ratio = models.CharField(max_length=255)
+    beta = models.CharField(max_length=255)
+    intrinsic_value = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['-pk']
+
+    def __str__(self):
+        return self.symbol + ' ' + self.symbol_name + ' Intrinsic value: ' + self.intrinsic_value

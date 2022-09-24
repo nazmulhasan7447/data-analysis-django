@@ -8,6 +8,8 @@ urlpatterns = [
     re_path(r'^get/perpetualgrowth/cost_of/debt/$', GetPerpetualCostOfDebt.as_view(), name='getPerpetualGrowthCostofDebt'),
     re_path(r'^get/perpetualgrowth/rate/(?P<userID>[-\w]+)/$', GetPerpetualGrowthRateView.as_view(), name='getGetPerpetualGrowthRateView'),
     re_path(r'^get/perpetual/growth/history/$', GetPerpetualGrowthRateHistoryView.as_view(), name="getPerpetualGrowthHistory"),
+    re_path(r'^get/estimated/intrinsic/value/(?P<userID>[-\w]+)/$', GetEstimatedIntrinsicValue.as_view(), name="getEstimatedIntrinsicValue"),
+    re_path(r'^get/estimated/intrinsic/value/history/data/$', EstimatedIntrinsicValueHistoryView.as_view(), name="getEstimatedIntrinsicValueHistoryData"),
 
     re_path(r'^user-list/$', AllUsersAccountView.as_view(), name='userList'),
     re_path(r'^user-details/(?P<user_id>\w+)/$', AccountDetailsView.as_view(), name='userDetails'),

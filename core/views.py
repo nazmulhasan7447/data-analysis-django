@@ -27,6 +27,7 @@ import datetime
 from yahoo_fin import stock_info as si
 from .check_yahoo_symbool import symbol_found
 from .getPerpetualGrowthRateData import calculate_costOfEquity, calculate_costOfDebt, estimate_growth_rate
+from .getEstimatedIntrinsicValue import get_3_stage_growth_value
 
 import stripe
 # This is your test secret API key.
@@ -338,27 +339,59 @@ class GetPerpetualGrowthRateHistoryView(APIView):
         serilizer = PerpetualGrowthRateHistorySerializer(history, many=True)
 
         return Response(serilizer.data, status=status.HTTP_200_OK)
-# {
-#     'date': '16-Sep-2022',
-#     'symbol': 'aapl',
-#     'symbol_name': 'Apple Inc.',
-#     'symbol_currency': 'USD',
-#     'revenue_ttm': 387542.0,
-#     'nop_ttm': 101983.0,
-#     'roe': 1.714647116526408,
-#     'roc': 0.5735891292365494,
-#     'ke': 0.2081,
-#     'kd': 0.0948,
-#     'ev': 2701460.0,
-#     'wacc': 0.13182810549050045,
-#     'market_cap': 2630000.0,
-#     'perpetual_gowth_rate': 0.0393,
-#     'de_ratio': 2.059837885280603,
-#     'beta': 1.23
-# }
 
 
+class GetEstimatedIntrinsicValue(APIView):
 
+    def post(self, request, userID):
+
+        user = Account.objects.filter(userID=userID).first()
+        # ticker, CRP, CSRP, rating, premium, Stage1_years, Stage1_growthRate, Stage2_years, Stage2_growthRate, perpetual_growthRate
+        estimated_intrinsic_value = get_3_stage_growth_value(
+            request.data['symbol'], float(request.data['crp']), float(request.data['comRP']),
+            request.data['rating'], float(request.data['premium']), float(request.data['stage_1_years']),
+            float(request.data['stage_1_growth']), float(request.data['stage_2_years']), float(request.data['stage_2_growth']),
+            float(request.data['stage_3_growth'])
+        )
+
+        if user and estimated_intrinsic_value:
+            store_to_db = EstimatedIntrinsicValueData(
+                user=user,
+                date=estimated_intrinsic_value['date'],
+                symbol=estimated_intrinsic_value['symbol'],
+                symbol_name=estimated_intrinsic_value['symbol_name'],
+                symbol_currency=estimated_intrinsic_value['currency'],
+                revenue_ttm=estimated_intrinsic_value['revnue_ttm'],
+                nop_ttm=estimated_intrinsic_value['nop_ttm'],
+                roe=estimated_intrinsic_value['roe'],
+                roc=estimated_intrinsic_value['roc'],
+                ke=estimated_intrinsic_value['ke'],
+                kd=estimated_intrinsic_value['kd'],
+                ev=estimated_intrinsic_value['ev'],
+                wacc=estimated_intrinsic_value['wacc'],
+                market_cap=estimated_intrinsic_value['market_cap'],
+                de_ratio=estimated_intrinsic_value['de'],
+                beta=estimated_intrinsic_value['beta'],
+                stage_1_growth=estimated_intrinsic_value['stage_1_growth'],
+                stage_2_growth=estimated_intrinsic_value['stage_2_growth'],
+                perpetual_growth_rate=estimated_intrinsic_value['perpetual_growth'],
+                intrinsic_value=estimated_intrinsic_value['intrinsic_value']
+            )
+            store_to_db.save()
+        return Response(estimated_intrinsic_value)
+
+
+class EstimatedIntrinsicValueHistoryView(APIView):
+
+    def get(self, request):
+        history = EstimatedIntrinsicValueData.objects.all()
+        serilizer = EstimatedIntrinsicValueHistorySerializer(history, many=True)
+
+        return Response(serilizer.data, status=status.HTTP_200_OK)
+
+
+# {'symbol': 'aapl', 'crp': '0', 'comRP': '0.5', 'rating': 'AAA', 'premium': '0.25', 'stage_1_years': '5', 'stage_1_growth': '0.02', 'stage_2_years': '0.05', 'stage_2_growth': '056', 'stage_3_growth': '2'}
+# get_3_stage_growth_value('AAPL',0.1,0.05,'aaa',0.01,3,0.1,5,0.02,0.01)
 
 
 

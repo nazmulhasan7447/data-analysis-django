@@ -75,7 +75,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dataAnalysis.wsgi.application'
 
-# DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 AUTH_USER_MODEL = 'user.Account'
 
@@ -194,7 +194,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#
+# #
 # STATICFILES_DIRS = (
 #      os.path.join(BASE_DIR, 'core/templates/build/static'),
 #      os.path.join(BASE_DIR, 'core/templates/build'),
