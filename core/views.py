@@ -4,7 +4,9 @@ from django.template.loader import render_to_string
 from django.core.files.storage import FileSystemStorage
 from django.db.models import Q
 from django.utils import timezone
+from datetime import datetime
 from .EmailThread import EmailThreading
+
 
 from rest_framework.response import Response
 from rest_framework import status
@@ -286,13 +288,11 @@ class StartFreeTrialView(APIView):
         else:
             return Response({'error': "Your 7-days free trial can't be activated! Try again please!"})
 
-
 class GetPerpetualGrowthCostOfEquity(APIView):
 
     def post(self, request):
         cost_of_equity = calculate_costOfEquity(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']))
         return Response(cost_of_equity)
-
 
 class GetPerpetualCostOfDebt(APIView):
 
@@ -303,6 +303,7 @@ class GetPerpetualCostOfDebt(APIView):
 class GetPerpetualGrowthRateView(APIView):
 
     def post(self, request, userID):
+
         user = Account.objects.filter(userID=userID).first()
 
         estimateGrowthRate = estimate_growth_rate(request.data['symbol'], float(request.data['crp']), float(request.data['comRP']), request.data['rating'], float(request.data['premium']))
@@ -325,9 +326,16 @@ class GetPerpetualGrowthRateView(APIView):
             market_cap = estimateGrowthRate['market_cap'],
             perpetual_growth_rate = estimateGrowthRate['perpetual_gowth_rate'],
             de_ratio = estimateGrowthRate['de_ratio'],
-            beta = estimateGrowthRate['beta'],
+            beta = estimateGrowthRate['beta']
             )
             perpetualGrowthRateToStore.save()
+
+            # save to user number of request
+            store_num_or_request = NumberOfRequestByUser(
+                user=user,
+                no_requests=1
+            )
+            store_num_or_request.save()
 
         return Response(estimateGrowthRate)
 
@@ -346,7 +354,7 @@ class GetEstimatedIntrinsicValue(APIView):
     def post(self, request, userID):
 
         user = Account.objects.filter(userID=userID).first()
-        # ticker, CRP, CSRP, rating, premium, Stage1_years, Stage1_growthRate, Stage2_years, Stage2_growthRate, perpetual_growthRate
+
         estimated_intrinsic_value = get_3_stage_growth_value(
             request.data['symbol'], float(request.data['crp']), float(request.data['comRP']),
             request.data['rating'], float(request.data['premium']), float(request.data['stage_1_years']),
@@ -386,12 +394,19 @@ class EstimatedIntrinsicValueHistoryView(APIView):
     def get(self, request):
         history = EstimatedIntrinsicValueData.objects.all()
         serilizer = EstimatedIntrinsicValueHistorySerializer(history, many=True)
-
         return Response(serilizer.data, status=status.HTTP_200_OK)
 
 
-# {'symbol': 'aapl', 'crp': '0', 'comRP': '0.5', 'rating': 'AAA', 'premium': '0.25', 'stage_1_years': '5', 'stage_1_growth': '0.02', 'stage_2_years': '0.05', 'stage_2_growth': '056', 'stage_3_growth': '2'}
-# get_3_stage_growth_value('AAPL',0.1,0.05,'aaa',0.01,3,0.1,5,0.02,0.01)
+class NumberOfRequestSentByUser(APIView):
+
+    def get(self, request, userID):
+        user = Account.objects.filter(userID=userID).first()
+        current_user_requests = NumberOfRequestByUser.objects.filter(Q(user__userID=userID) & Q(date_time__date=timezone.now())).count()
+
+        if user and current_user_requests:
+            return Response({'no_of_request_today': current_user_requests, 'user_paid_status': user.is_paid_member}, status=status.HTTP_200_OK)
+        return Response({'no_of_request_today': 0, 'user_paid_status': False}, status=status.HTTP_200_OK)
+
 
 
 

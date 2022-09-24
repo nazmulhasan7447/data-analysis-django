@@ -137,3 +137,13 @@ class EstimatedIntrinsicValueData(models.Model):
 
     def __str__(self):
         return self.symbol + ' ' + self.symbol_name + ' Intrinsic value: ' + self.intrinsic_value
+
+
+class NumberOfRequestByUser(models.Model):
+    user = models.ForeignKey(Account, on_delete=models.CASCADE)
+    no_requests = models.IntegerField(default=0)
+    date_time = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.user.email + ' || No of request: ' + str(self.no_requests)
+

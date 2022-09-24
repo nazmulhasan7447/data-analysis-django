@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from user.models import Account, ProfileImage
-from ..models import PackageName, PackageItems, PackagePurchaseHistory, Message, PerpetualGrowthRateData, EstimatedIntrinsicValueData
+from ..models import PackageName, PackageItems, PackagePurchaseHistory, Message, PerpetualGrowthRateData, EstimatedIntrinsicValueData, NumberOfRequestByUser
 from django.utils.crypto import get_random_string
 from django.contrib.auth import authenticate
 
@@ -146,3 +146,9 @@ class EstimatedIntrinsicValueHistorySerializer(serializers.ModelSerializer):
         class Meta:
             model = EstimatedIntrinsicValueData
             fields = "__all__"
+
+class GetNumberOfRequestByUserSerializer(serializers.ModelSerializer):
+    user = UserAccountListSerializer()
+    class Meta:
+        model = NumberOfRequestByUser
+        fields = "__all__"

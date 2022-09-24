@@ -11,6 +11,9 @@ urlpatterns = [
     re_path(r'^get/estimated/intrinsic/value/(?P<userID>[-\w]+)/$', GetEstimatedIntrinsicValue.as_view(), name="getEstimatedIntrinsicValue"),
     re_path(r'^get/estimated/intrinsic/value/history/data/$', EstimatedIntrinsicValueHistoryView.as_view(), name="getEstimatedIntrinsicValueHistoryData"),
 
+    # get number of requests
+    re_path(r'^get/number/of/reques/by/user/(?P<userID>[-\w]+)/$', NumberOfRequestSentByUser.as_view(), name="getNumberOfRequestsByUser"),
+
     re_path(r'^user-list/$', AllUsersAccountView.as_view(), name='userList'),
     re_path(r'^user-details/(?P<user_id>\w+)/$', AccountDetailsView.as_view(), name='userDetails'),
     re_path(r'^create-account/$', CreateAccountView.as_view(), name='createAccount'),
