@@ -427,7 +427,7 @@ def get_ycharts_yield_quote(ticker):
 # rating is from the rating field
 
 def calculate_costOfDebt(ticker, rating, premium):
-    global CorporateYield
+    CorporateYield = 0
 
     Risk_free_rate = get_nbc_yieldQuote('US30Y')
 

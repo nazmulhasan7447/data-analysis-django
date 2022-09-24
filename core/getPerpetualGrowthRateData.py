@@ -466,7 +466,7 @@ def calculate_costOfEquity(ticker, CRP, CSRP):
 # ticker is from the Symbol field
 # rating is from the rating field
 def calculate_costOfDebt(ticker, rating, premium):
-    global CorporateYield
+    CorporateYield = 0
     Risk_free_rate = get_nbc_yieldQuote('US30Y')
 
     # Get this from Django form - "Rating" field
