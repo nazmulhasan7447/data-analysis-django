@@ -216,6 +216,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://example.com",
     "http://localhost:3000",
     "https://urchin-app-zje85.ondigitalocean.app",
+    "https://mavenfinance.com",
 ]
 
 CORS_ALLOW_METHODS = [
