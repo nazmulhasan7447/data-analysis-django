@@ -18,6 +18,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ALLOWED_HOSTS = []
 # ends prev section *******************************************************
 
+# this part for digital ocean
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 DEBUG = os.getenv("DEBUG", "False") == "True"
@@ -75,6 +76,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'dataAnalysis.wsgi.application'
 
+# this part for digital ocean
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 AUTH_USER_MODEL = 'user.Account'
@@ -95,7 +97,7 @@ AUTH_USER_MODEL = 'user.Account'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-
+# this db setting part for digital ocean
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 if DEVELOPMENT_MODE is True:
     DATABASES = {
@@ -194,14 +196,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # MEDIA_URL = '/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-# #
+
 # STATICFILES_DIRS = (
 #      os.path.join(BASE_DIR, 'core/templates/build/static'),
 #      os.path.join(BASE_DIR, 'core/templates/build'),
 # )
 
 
-# new section **********************************************
+# this part for digital ocean static and media files **********************************************
 from .cdn.conf import *
 
 

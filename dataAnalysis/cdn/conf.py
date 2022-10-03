@@ -1,3 +1,4 @@
+# this part for digital ocean static and media files
 import os
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID")

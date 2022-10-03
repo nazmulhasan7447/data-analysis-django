@@ -453,7 +453,7 @@ def calculate_costOfEquity(ticker, CRP, CSRP):
     # Ke is the final result to be displyed in Django "Cost of Equity"
     # Display in %: Ke * 100
     # Store in DB - Ke
-    Ke = round((Risk_free_rate + (Beta * ERP) + CSRP + CRP) * 100, 2)
+    Ke = round((Risk_free_rate + (Beta * ERP) + CSRP + CRP), 2)
 
 
     # print('Cost of Equity = ', Ke)
@@ -498,7 +498,7 @@ def calculate_costOfDebt(ticker, rating, premium):
     # print('Default Spread = ', Default_spread)
 
     # Store in DB - Kd
-    Kd = round((Risk_free_rate + Default_spread + premium) * 100, 2)
+    Kd = round((Risk_free_rate + Default_spread + premium), 2)
 
 
     # print('Cost of debt = ', Kd)

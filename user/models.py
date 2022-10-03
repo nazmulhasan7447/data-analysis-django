@@ -36,7 +36,7 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-
+# all users model to store registered accounts
 class Account(AbstractBaseUser):
 
     options = (
@@ -90,7 +90,7 @@ class Account(AbstractBaseUser):
         # Simplest possible answer: All admins are staff
         return self.is_admin
 
-
+# storing profile image/picture of every user
 class ProfileImage(models.Model):
     user = models.OneToOneField(Account, on_delete=models.CASCADE, related_name='profile_pic')
     img =  models.ImageField(upload_to='profileImg')

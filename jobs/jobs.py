@@ -1,3 +1,5 @@
+# job schedular for monitoring our paid and trial members. After the the duration, it will automatically made the user free user(while time is up)
+
 import datetime
 from user.models import Account
 
