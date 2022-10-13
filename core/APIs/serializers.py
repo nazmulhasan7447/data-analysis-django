@@ -31,6 +31,7 @@ class UserAccountListSerializer(serializers.ModelSerializer):
         model = Account
         exclude = ('password',)
 
+
 # create account serializer
 class CreateUserSerializer(serializers.ModelSerializer):
     class Meta:

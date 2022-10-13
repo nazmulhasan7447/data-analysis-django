@@ -3,6 +3,8 @@ from django.urls import path, re_path, include
 from .views import *
 
 urlpatterns = [
+    re_path(r'^img/list/$', ProfileImgView.as_view()),
+
     re_path(r'^check/symbool/$', IsSymboolOkay.as_view(), name='checkSymbool'),
     re_path(r'^get/perpetualgrowth/cost_of/equity/$', GetPerpetualGrowthCostOfEquity.as_view(), name='getPerpetualGrowthCostofEquity'),
     re_path(r'^get/perpetualgrowth/cost_of/debt/$', GetPerpetualCostOfDebt.as_view(), name='getPerpetualGrowthCostofDebt'),

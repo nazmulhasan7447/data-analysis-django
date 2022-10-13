@@ -36,6 +36,12 @@ import stripe
 stripe.api_key = 'sk_test_tWChqwtM920Q34mlu8VPNroB'
 
 
+class ProfileImgView(APIView):
+    def get(self, request):
+        s = ProfileImage.objects.all()
+        s1 = ProfileImageListSerializer(s, many=True)
+        return Response(s1.data)
+
 
 # checking symbool
 class IsSymboolOkay(APIView):
@@ -295,7 +301,8 @@ class GetPerpetualGrowthCostOfEquity(APIView):
         comRP = (float(request.data['comRP'])) / 100
 
         cost_of_equity = calculate_costOfEquity(request.data['symbol'], crp, comRP)
-        return Response(cost_of_equity)
+
+        return Response(cost_of_equity*100)
 
 class GetPerpetualCostOfDebt(APIView):
 
