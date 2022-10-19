@@ -454,7 +454,7 @@ def calculate_costOfEquity(ticker, CRP, CSRP):
     # Display in %: Ke * 100
     # Store in DB - Ke
     Ke = round((Risk_free_rate + (Beta * ERP) + CSRP + CRP), 2)
-
+    print('inside', Ke)
 
     # print('Cost of Equity = ', Ke)
 
@@ -627,11 +627,13 @@ def estimate_growth_rate(ticker, CRP, CSRP, rating, premium):
 
     # print('ROC = ', f"{ROC:.1%}")
 
-    Ke = calculate_costOfEquity(ticker, CRP, CSRP)
+    Ke = calculate_costOfEquity(ticker, CRP, CSRP) * 100
+    print('final', Ke)
 
     # print('Cost of Equity = ', Ke)
 
-    Kd = calculate_costOfDebt(ticker, rating, premium)
+    Kd = calculate_costOfDebt(ticker, rating, premium) * 100
+    print('final', Kd)
 
     # print('Cost of debt = ', Kd)
 
@@ -684,7 +686,7 @@ def estimate_growth_rate(ticker, CRP, CSRP, rating, premium):
         'de_ratio': DE_ratio,
         'beta': beta
     }
-    print(data)
+    # print(data)
 
     return data
 

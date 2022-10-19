@@ -382,7 +382,7 @@ def calculate_costOfEquity(ticker, CRP, CSRP):
     # Ke is the final result to be displyed in Django "Cost of Equity"
     # Display in %: Ke * 100
     # Store in DB - Ke
-    Ke = round((Risk_free_rate + (Beta * ERP) + CSRP + CRP) * 100, 2)
+    Ke = round((Risk_free_rate + (Beta * ERP) + CSRP + CRP), 2)
 
     # Return Cost of Equity = Ke
     return Ke
@@ -453,7 +453,7 @@ def calculate_costOfDebt(ticker, rating, premium):
         Default_spread = Risk_free_rate
 
     # Store in DB - Kd
-    Kd = round((Risk_free_rate + Default_spread + premium) * 100, 2)
+    Kd = round((Risk_free_rate + Default_spread + premium), 2)
 
     return Kd
 
@@ -650,11 +650,11 @@ def get_3_stage_growth_value(ticker, CRP,CSRP,rating,premium,Stage1_years,Stage1
     Beta = round(random.uniform(0.1, 2), 2)
 
 
-    Ke = calculate_costOfEquity(ticker, CRP, CSRP)
+    Ke = calculate_costOfEquity(ticker, CRP, CSRP) * 100
 
     # Default_spread = float(input('Enter Default Spread = '))
 
-    Kd = calculate_costOfDebt(ticker, rating, premium)
+    Kd = calculate_costOfDebt(ticker, rating, premium) * 100
 
     if (Total_debt > 0):
         DE_ratio = round((Total_debt / Equity_BV) * 100, 2)

@@ -19,7 +19,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ends prev section *******************************************************
 
 # this part for digital ocean
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
 DEBUG = os.getenv("DEBUG", "False") == "True"
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1, localhost").split(",")
@@ -84,7 +83,7 @@ AUTH_USER_MODEL = 'user.Account'
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
-#
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
@@ -191,7 +190,6 @@ SIMPLE_JWT = {
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # MEDIA_URL = '/media/'

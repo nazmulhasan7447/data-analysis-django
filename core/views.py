@@ -318,9 +318,9 @@ class GetPerpetualGrowthRateView(APIView):
 
         user = Account.objects.filter(userID=userID).first()
 
-        crp = (float(request.data['crp']))
-        comRP = (float(request.data['comRP']))
-        premium = (float(request.data['premium']))
+        crp = (float(request.data['crp']))/100
+        comRP = (float(request.data['comRP']))/100
+        premium = (float(request.data['premium']))/100
 
         estimateGrowthRate = estimate_growth_rate(request.data['symbol'], crp, comRP, request.data['rating'], premium)
 
