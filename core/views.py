@@ -359,7 +359,7 @@ class GetPerpetualGrowthRateView(APIView):
 class GetPerpetualGrowthRateHistoryView(APIView):
 
     def get(self, request):
-        history = PerpetualGrowthRateData.objects.all()
+        history = PerpetualGrowthRateData.objects.filter(user=request.user)
         serilizer = PerpetualGrowthRateHistorySerializer(history, many=True)
 
         return Response(serilizer.data, status=status.HTTP_200_OK)
@@ -408,7 +408,7 @@ class GetEstimatedIntrinsicValue(APIView):
 class EstimatedIntrinsicValueHistoryView(APIView):
 
     def get(self, request):
-        history = EstimatedIntrinsicValueData.objects.all()
+        history = EstimatedIntrinsicValueData.objects.filter(user=request.user)
         serilizer = EstimatedIntrinsicValueHistorySerializer(history, many=True)
         return Response(serilizer.data, status=status.HTTP_200_OK)
 
