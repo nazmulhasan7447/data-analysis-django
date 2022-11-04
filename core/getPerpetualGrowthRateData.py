@@ -242,6 +242,7 @@ def get_yahoo_marketcap(ticker):
 
 
 def get_stockanalysis_ttm_income(ticker):
+    income_table = 0
     financials_page = "https://stockanalysis.com/stocks/" + ticker + \
                       "/financials/trailing/"
 
@@ -539,83 +540,83 @@ def estimate_growth_rate(ticker, CRP, CSRP, rating, premium):
     column_used = 0
 
     # Store in DB - Revenue TTM
-    Revenue_latest = income_df.loc['Revenue'][column_used]
+    Revenue_latest = income_df
+    EBITDA_latest = income_df
+    EBIT_latest = income_df
+    PBT_latest = income_df
+    Taxes_latest = income_df
+    Net_income_common = income_df
 
-    EBITDA_latest = income_df.loc['EBITDA'][column_used]
+    if hasattr(income_df, 'loc'):
+        Revenue_latest = income_df.loc['Revenue'][column_used]
+        EBITDA_latest = income_df.loc['EBITDA'][column_used]
+        EBIT_latest = income_df.loc['EBIT'][column_used]
+        PBT_latest = income_df.loc['Pretax Income'][column_used]
+        Taxes_latest = income_df.loc['Income Tax'][column_used]
+        Net_income_common = income_df.loc['Net Income Common'][column_used]
+    else:
+        Revenue_latest = income_df
+        EBITDA_latest = income_df
+        EBIT_latest = income_df
+        PBT_latest = income_df
+        Taxes_latest = income_df
+        Net_income_common = income_df
 
-    EBIT_latest = income_df.loc['EBIT'][column_used]
-
-    PBT_latest = income_df.loc['Pretax Income'][column_used]
-
-    Taxes_latest = income_df.loc['Income Tax'][column_used]
-
+    Depreciation_latest = 0
+    Capex = 0
+    Acquisitions = 0
+    Working_capital_changes = 0
     try:
-        Depreciation_latest = cashflow_df.loc['Depreciation & Amortization'][column_used]
-
+        if cashflow_df is not None:
+            Depreciation_latest = cashflow_df.loc['Depreciation & Amortization'][column_used]
+            Capex = cashflow_df.loc['Capital Expenditures'][column_used]
+            Acquisitions = cashflow_df.loc['Acquisitions'][column_used]
+            Working_capital_changes = cashflow_df.loc['Other Operating Activities'][column_used]
     except KeyError:
         Depreciation_latest = 0
+        Capex = 0
+        Acquisitions = 0
+        Working_capital_changes = 0
 
     # if EBIT is NaN or less than zero then this method is not suitable
     if (math.isnan(EBIT_latest) or (EBIT_latest <= 0)):
         print('EBIT is less than or equal to ZERO. No value can be calculated.')
         # return np.nan
 
-    Tax_rate = Taxes_latest / PBT_latest
-    Tax_rate_percent = f"{Tax_rate:.1%}"
-    # print(Tax_rate_percent)
+    if PBT_latest != 0:
+        Tax_rate = Taxes_latest / PBT_latest
+    else:
+        Tax_rate = 0
 
     # Store in DB - NOP TTM
     Net_Operating_Income = round(EBIT_latest * (1 - Tax_rate), 0)
 
     cashflow_df = get_stockanalysis_ttm_cashflow(ticker)
 
-    try:
-        Capex = cashflow_df.loc['Capital Expenditures'][column_used]
-    except KeyError:
-        Capex = 0
-
-    try:
-        Acquisitions = cashflow_df.loc['Acquisitions'][column_used]
-    except KeyError:
-        Acquisitions = 0
-
-    Working_capital_changes = cashflow_df.loc['Other Operating Activities'][column_used]
 
     Reinvestment = Capex + Acquisitions + Depreciation_latest + Working_capital_changes
 
-    # print('Capex = ', Capex)
-    # print('Acquisitions = ', Acquisitions)
-    # print('WC changes = ', Working_capital_changes)
-    # print('Reinvestment = ', Reinvestment)
-
+    Goodwill = 1
+    Total_debt = 1
+    Total_cash_equivalents = 1
+    Equity_BV = 1
     try:
-        Goodwill = balancesheet_df.loc['Goodwill and Intangibles'][column_used]
+        if balancesheet_df is not None:
+            Goodwill = balancesheet_df.loc['Goodwill and Intangibles'][column_used]
+            Total_debt = balancesheet_df.loc['Total Debt'][column_used]
+
+            Total_cash_equivalents = balancesheet_df.loc['Cash & Cash Equivalents'][column_used]
+            Equity_BV = balancesheet_df.loc["Shareholders' Equity"][column_used]
     except KeyError:
-        Goodwill = 0
-
-    # print('Goodwill = ', Goodwill)
-
-    Total_debt = balancesheet_df.loc['Total Debt'][column_used]
-
-    Total_cash_equivalents = balancesheet_df.loc['Cash & Cash Equivalents'][column_used]
-
-    # print('Total Debt = ', Total_debt)
-
-    # print('Total Cash = ', Total_cash_equivalents)
+        Goodwill = 1
+        Total_debt = 1
+        Total_cash_equivalents = 1
+        Equity_BV = 1
 
     Net_debt = Total_debt - Total_cash_equivalents
 
-    # print('Net debt = ', Net_debt)
-
-    Equity_BV = balancesheet_df.loc["Shareholders' Equity"][column_used]
-
-    # print("Shareholders' equity = ", Equity_BV)
-
     Invested_capital = Total_debt + Equity_BV
 
-    # print('Invested capital = ', Invested_capital)
-
-    Net_income_common = income_df.loc['Net Income Common'][column_used]
 
     # Store in DB - ROE
     ROE = (Net_income_common / Equity_BV) * 100
@@ -625,15 +626,10 @@ def estimate_growth_rate(ticker, CRP, CSRP, rating, premium):
     # Store in DB - ROC
     ROC = (Net_Operating_Income / Invested_capital) * 100
 
-    # print('ROC = ', f"{ROC:.1%}")
-
     Ke = calculate_costOfEquity(ticker, CRP, CSRP) * 100
-    print('final', Ke)
 
-    # print('Cost of Equity = ', Ke)
 
     Kd = calculate_costOfDebt(ticker, rating, premium) * 100
-    print('final', Kd)
 
     # print('Cost of debt = ', Kd)
 
@@ -649,9 +645,6 @@ def estimate_growth_rate(ticker, CRP, CSRP, rating, premium):
     # Store in DB - WACC
     WACC = (Kd * Debt_percent) + (Ke * (1 - Debt_percent))
 
-    # print('WACC = ', WACC)
-
-    # print('Net Operating Income = ', Net_Operating_Income)
 
     # placeholder
     Growth_rate = 0.03

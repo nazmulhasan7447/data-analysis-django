@@ -322,7 +322,10 @@ class GetPerpetualGrowthRateView(APIView):
         comRP = (float(request.data['comRP']))/100
         premium = (float(request.data['premium']))/100
 
+        print(crp, comRP, premium, request.data['rating'])
+
         estimateGrowthRate = estimate_growth_rate(request.data['symbol'], crp, comRP, request.data['rating'], premium)
+        print(estimateGrowthRate)
 
         if user and estimateGrowthRate:
             perpetualGrowthRateToStore = PerpetualGrowthRateData(
